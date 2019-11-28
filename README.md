@@ -18,7 +18,7 @@ PoolSNP creates multiple output files:
 * A **Max-coverage file** containing the maximum coverage thressholds for all chromosomal arms and libraries in the mpileup file (separarted by a column)
 * Optionally a **Bad-sites file** (by setting the parameter BS=1), which contains a list of (variable and invariable) sites that did not pass the SNP calling criteria. This file can be used to weight windows for the calulation of population genetic estimators with [PoolGEN](https://github.com/capoony/repo/PoolGen/readme.md).
 
-PoolSNP is a python script that is by default single threaded. To process large datasets, I provide a shell script using GNU parallel to utilize multiple threads. Parameters need to be passed to the shell script and all necessary steps will be processed serially (or in parallel, whenever possible). However, the three python scripts being part of the PoolSNP pipeline can also be used as standalone scripts. Please look into the well-documented shellscript (PoolSNP.sh) for more details.
+PoolSNP is by default single threaded. To process large datasets, I provide a shell script using GNU parallel to utilize multiple threads. Parameters need to be passed to the shell script and all necessary steps will be processed serially (or in parallel, whenever possible). However, the three python scripts being part of the PoolSNP pipeline can also be used as standalone scripts. Please look into the well-documented shellscript (PoolSNP.sh) for more details.
 
 PoolSNP has been tested on Mac OSX (10.11) and Linux Ubuntu (16.10). The shellscript only works with a BASH shell and requires Python 2.7 and GNU parallel to be installed in Path
 
