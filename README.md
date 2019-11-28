@@ -2,10 +2,14 @@
 
 ## Heuristic SNP caller for pooled sequencing data
 
-PoolSNP is a heuristic SNP caller, which uses an MPILEUP file and a FASTA references as inputs. NOTE, that the FASTA headers may NOT contain any special characters, such as "/\|,:", or else they will be ignored. Heuristic parameters to be passed to the script are: 
+PoolSNP is a heuristic SNP caller, which uses an MPILEUP file and a reference genome in FASTA format as inputs. NOTE, that the FASTA headers may NOT contain any special characters, such as "/\|,:", or else they will be ignored. Heuristic parameters to be passed to the script are: 
+
 * **Minimum coverage** across all libraries; e.g. *min-cov=10* will only consider positions with a minimum coverage >10 
-* **Maximum coverage** is calculated for every library and chromosomal arm as the percentile of a coverage distribution; e.g. *max-cov=0.98* will only consider positions within the 98% coverage percentile for a given sample and chromosomal arm; This cutoff can either be newly calculated by providing the threshold percentile or by providing the full path to a max-coverage file. This needs to be tab-delimited with two columns, where the first contains the chromosome name and the second a comma-separated list of coverage-thresholds corresponding in length to the number of samples in the mpileup file. For example, a
-* **Minimum allele count** of the minor allele across all libraries combined (min-count)
+
+* **Maximum coverage** is calculated for every library and chromosomal arm as the percentile of a coverage distribution; e.g. *max-cov=0.98* will only consider positions within the 98% coverage percentile for a given sample and chromosomal arm; This cutoff can either be newly calculated by providing the threshold percentile or by providing the full path to a max-coverage file. This needs to be tab-delimited with two columns, where the first contains the chromosome name and the second a comma-separated list of coverage-thresholds corresponding in length to the number of samples in the mpileup file. For example, if a max-cov threshold of 100 and 200 should be set for the first three and the last two samples in the mpileup file for chromosome 2L, a typical line in the max-cov file should look like this: *2L 100,100,100,200,200*
+
+* **Minimum allele count** of the minor allele across all libraries combined; e.g. *min-count=10* will only consider a position as polymorphic if a minor a
+
 * **Minimum allele frequency** across all libraries combined (min-freq)  
 * **Missing fraction**, which is the maximum percentage of libraries that are allowed to NOT full-fill all above criteria (miss-frac).
 
