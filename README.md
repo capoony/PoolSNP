@@ -3,9 +3,9 @@
 ## Heuristic SNP caller for pooled sequencing data
 
 PoolSNP is a heuristic SNP caller, which uses an MPILEUP file and a FASTA references as inputs. NOTE, that the FASTA headers may NOT contain any special characters, such as "/\|,:", or else they will be ignored. Heuristic parameters to be passed to the script are: 
-* **Minimum coverage** across all libraries (min-cov)
-* **Maximum coverage**, which is calculated for every library and chromosomal arm as the percentile of a coverage distribution (max-cov), 
-* **Minimum allele count** of the minor allele across all libraries combined (min-count), 
+* **Minimum coverage** across all libraries; e.g. *min-cov=10* will only consider positions with a minimum coverage >10 
+* **Maximum coverage** is calculated for every library and chromosomal arm as the percentile of a coverage distribution; e.g. *max-cov=0.98* will only consider positions within the 98% coverage percentile for a given sample and chromosomal arm; This cutoff can either be newly calculated by providing the threshold percentile or by providing the full path to a max-coverage file. This needs to be tab-delimited with two columns, where the first contains the chromosome name and the second a comma-separated list of coverage-thresholds corresponding in length to the number of samples in the mpileup file. For example, a
+* **Minimum allele count** of the minor allele across all libraries combined (min-count)
 * **Minimum allele frequency** across all libraries combined (min-freq)  
 * **Missing fraction**, which is the maximum percentage of libraries that are allowed to NOT full-fill all above criteria (miss-frac).
 
@@ -20,7 +20,7 @@ PoolSNP has been tested on Mac OSX (10.11) and Linux Ubuntu (16.10). The shellsc
 
 to get more help on the different parameters, execute the shellscript without parameters
 
-## A typical command-line for a mpileup file with four samples looks like this:
+## A typical command-line for an mpileup file with four samples looks like this:
 
 ```bash
 bash PoolSNP.sh   \
