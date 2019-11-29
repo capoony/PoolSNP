@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## PoolSNP v. 1.07 - 26/05/2019
+## PoolSNP
 
 ## Author: Martin Kapun
 
