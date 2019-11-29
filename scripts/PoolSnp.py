@@ -20,7 +20,7 @@ usage="""python %prog \
       --coding 1.8 \
       > output.vcf"""
 parser = OptionParser(usage=usage)
-helptext="""    
+helptext="""
 
 H E L P :
 _________
@@ -46,12 +46,12 @@ parser.add_option_group(group)
 
 def load_data(x):
     ''' import data either from a gzipped or or uncrompessed file or from STDIN'''
-    import gzip         
+    import gzip
     if x=="-":
         y=sys.stdin
     elif x.endswith(".gz"):
         y=gzip.open(x,"r")
-    else: 
+    else:
         y=open(x,"r")
     return y
 
@@ -84,7 +84,7 @@ def extract_indel(l,sign):
             i+=1
         else:
             break
-        
+
     seqlength = int(numb)
     sequence = l[position:position+i+1+seqlength]
     indel=sequence.replace(numb,"")
@@ -129,12 +129,12 @@ for line in load_data(data):
 
     k = line[:-1].split('\t')
     CHR,POS,REF = k[:3]
-    
+
     ## only keep chromosomal arms with maximum coverage threshold
     if CHR not in maximumcov:
         #print CHR
         continue
-    
+
     div = list(splitter(k,3))
     libraries=div[1:]
     # loop through libraries
@@ -146,12 +146,12 @@ for line in load_data(data):
         alleles[j]
         nuc = libraries[j][1]
         qualities = libraries[j][2]
-        
+
         # test if seq-string is empty
         if nuc=="*":
             covtest[j]=1
             continue
-  
+
         # find and remove read indices and mapping quality string
         nuc = re.sub(r'\^.',r'',nuc)
         nuc = nuc.replace('$','')
@@ -165,24 +165,24 @@ for line in load_data(data):
             else:
                 deletion,dele=extract_indel(nuc,"-")
                 nuc=nuc.replace(deletion,"")
-        
-        
+
+
         # test for base quality threshold (if below: ignore nucleotide)
         #print len(nuc),len(qualities)
         nuc = "".join([nuc[x] for x in range(len(nuc)) if ord(qualities[x])-pc>=baseqthreshold])
         nuc = "".join([nuc[x] for x in range(len(nuc)) if nuc[x]!="*"])
-        
+
         # ignore if coverage is below or above thresholds after filtering for 1) InDels and 2) base-quality
         if len(nuc)<minimumcov or len(nuc)>maximumcov[CHR][j]:
             covtest[j]=1
             continue
         else:
             covtest[j]=0
-            
-        
+
+
         # read all alleles
         for i in range(len(nuc)):
-            
+
             # ignore single nucleotide deletions
             if nuc[i]=="*":
                 continue
@@ -199,7 +199,7 @@ for line in load_data(data):
     for allele,counts in totalalleles.items():
         if counts<minimumcount or counts/float(sum(totalalleles.values()))<minimumfreq:
             del totalalleles[allele]
-    
+
     ## test if site is polymorphic
     if len(totalalleles)<2:
         #print CHR,POS,"non-poly",totalalleles
@@ -215,27 +215,27 @@ for line in load_data(data):
         if i not in totalalleles:
             continue
         ALT.append(i)
-    
-    
+
+
     ## set ADP,NC,GT,AD and DP
     ADP=sum(totalalleles.values())/len(libraries)
     samplelist=[]
     co=0
     miss=0
-    
+
     for j in range(len(libraries)):
         ## make empty entry if no allele counts for sample
         if j not in alleles:
             samplelist.append("./.:.:.:.:.")
             miss+=1
             continue
-        
+
         ## make empty entry if sample not fullfilling min/max coverage threshold
         if covtest[j]==1:
             samplelist.append("./.:.:.:.:.")
             miss+=1
             continue
-        
+
         alleleh = alleles[j]
         # remove alleles not counted in all samples
         for k,v in alleleh.items():
@@ -243,24 +243,24 @@ for line in load_data(data):
                 del alleleh[k]
         GT,AD,RD,FREQ,NC=[],[],0,[],0
         DP=sum(alleleh.values())
-        
+
         ## test if mincoverage is still reached when removing alleles that do not fullfill criteria
         if DP<minimumcov:
             samplelist.append("./.:.:.:.:.")
             continue
-        
+
         ## test if sample empty:
         if "*" in alleleh or len(alleleh)==0:
             NC+=1
             samplelist.append("./.:.:.:.:.")
             miss+=1
             continue
-        
+
         # test if population is fixed for REF allele
         if len(alleleh)==1 and REF in alleleh:
             samplelist.append("0/0:"+str(DP)+":0:"+str(DP)+":0.0")
             continue
-        
+
         # test if population is fixed for ALT allele
         at=0
         if len(alleleh)==1:
@@ -271,7 +271,7 @@ for line in load_data(data):
                     continue
         if at==1:
             continue
-        
+
         ## proceed if population not fixed
         ## set REF counts
         if REF in alleleh:
@@ -283,13 +283,13 @@ for line in load_data(data):
                 AD.append(alleleh[ALT[i]])
                 RD=DP-sum(AD)
                 FREQ.append(round(alleleh[ALT[i]]/float(sum(alleleh.values())),2))
-        
+
         samplelist.append("/".join(map(str,GT))+":"+str(RD)+":"+",".join(map(str,AD))+":"+str(DP)+":"+",".join(map(str,FREQ)))
 
     ## test if missing fraction of samples smaller than threshold:
     if miss/float(len(libraries))>missfrac:
-        #print CHR,POS,"missing fraction",miss/float(len(libraries)) 
+        #print CHR,POS,"missing fraction",miss/float(len(libraries))
         continue
-    
+
     ## write output
     print CHR+"\t"+POS+"\t.\t"+REF+"\t"+",".join(ALT)+"\t.\t.\tADP="+str(ADP)+";NC="+str(NC)+"\tGT:RD:AD:DP:FREQ\t"+"\t".join(samplelist)
