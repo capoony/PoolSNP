@@ -14,6 +14,7 @@ usage="""python %prog \
       --max-cov data.cov \
       --min-count 10 \
       --min-freq 0.01 \
+      --mis-frac 0.1 \
       --base-quality-threshold 15 \
       --names Kib32,Tam10 \
       --coding 1.8 \
@@ -32,7 +33,7 @@ parser.add_option("--min-cov", dest="minc", help="The minimum coverage threshold
 parser.add_option("--max-cov", dest="max", help="An input file with precomputed coverage thresholds")
 parser.add_option("--min-count", dest="mint", help="The minimum number of counts of the alternative allele across all samples pooled",default=3)
 parser.add_option("--min-freq", dest="minf", help="The minimum Frequency of the alternative allele across all samples pooled",default=0.01)
-parser.add_option("--miss-frac", dest="mis", help="The minimum Frequency of the alternative allele across all samples pooled",default=0.01)
+parser.add_option("--miss-frac", dest="mis", help="The minimum Frequency of the alternative allele across all samples pooled",default=0.1)
 parser.add_option("--base-quality-threshold", dest="b", help="The Base-quality threshold for Qualities encoded in Sanger format (Illumina 1.8 format)",default=15)
 parser.add_option("--names", dest="n", help="a comma separted list of thenames of all samples in the mpileup file")
 parser.add_option("--coding", dest="c", help="the Illumina FASTQ quality coding",default=1.8)
