@@ -285,7 +285,7 @@ echo ""
 
 cat $out/temp/header.txt $out/temp/SNPs.txt | gzip > $out.vcf.gz
 
-#rm -r $out/temp
+rm -r $out/temp
 
 ###############################################
 ## export file containing sites with bad cov ##
