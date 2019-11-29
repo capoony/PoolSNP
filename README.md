@@ -4,7 +4,7 @@
 
 ### Requirements
 
-Python 2.7x
+Python 2.7\n
 [GNU parallel](https://www.gnu.org/software/parallel/) 
 
 ### Description
