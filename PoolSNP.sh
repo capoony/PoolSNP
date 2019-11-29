@@ -145,7 +145,7 @@ echo """##fileformat=VCFv4.2
 ##INFO=<ID=ADP,Number=1,Type=Integer,Description=\"Average per-sample depth of bases with Phred score >=$bq\">
 ##INFO=<ID=NC,Number=1,Type=Integer,Description=\"Number of samples not called\">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">
-##FORMAT=<ID=RD,Number=1,Type=Integer,Description=\"Refrence Counts\">
+##FORMAT=<ID=RD,Number=1,Type=Integer,Description=\"Reference Counts\">
 ##FORMAT=<ID=AD,Number=1,Type=Integer,Description=\"Alternative Counts\">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Total Depth\">
 ##FORMAT=<ID=FREQ,Number=1,Type=FLoat,Description=\"Variant allele frequency\">
