@@ -3,7 +3,7 @@ from collections import defaultdict as d
 from optparse import OptionParser, OptionGroup
 import math
 
-#Author: Martin Kapun v. 1.05 - 13/11/2017
+#Author: Martin Kapun
 
 #########################################################   HELP   #########################################################################
 usage="""\npython %prog \
