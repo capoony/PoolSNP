@@ -111,6 +111,7 @@ if [ -z "$ref" ]; then echo "$help\nThe full path to the reference FASTA genome 
 if [ -z "$mac" ]; then echo "$help\nEither provide an upper quantile cutoff (e.g. 0.95 to exclude all reads lager than the 95% coverage percentile) or input file"; exit 4; fi
 if [ -z "$mic" ]; then mic=10; fi
 if [ -z "$mis" ]; then mis=0.1; fi
+if [ -z "$mif" ]; then mif=0.01; fi
 if [ -z "$mico" ]; then mico=20; fi
 if [ -z "$bq" ]; then bq=15; fi
 if [ -z "$jobs" ]; then jobs=1; fi
