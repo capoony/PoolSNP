@@ -5,7 +5,7 @@ from optparse import OptionParser, OptionGroup
 import math
 import gzip
 
-#Author: Martin Kapun v. 1.06 - 12/02/2019
+#Author: Martin Kapun
 
 #########################################################   HELP   #########################################################################
 usage="""python %prog \
