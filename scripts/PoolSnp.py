@@ -57,7 +57,7 @@ def load_data(x):
 
 def keywithmaxvalue(d):
     ''' This function resturns the key for the maximum value in a dictionary'''
-    newhash=collections.d(list)
+    newhash=d(list)
     for k,v in d.items():
         newhash[v].append(k)
     return newhash[max(newhash.keys())]
