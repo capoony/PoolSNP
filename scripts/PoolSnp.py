@@ -140,7 +140,6 @@ for line in load_data(data):
     # loop through libraries
     totalalleles=d(int)
     alleles=d(lambda:d(int))
-    covtest=d(int)
 
     for j in range(len(libraries)):
         alleles[j]
@@ -149,13 +148,11 @@ for line in load_data(data):
 
         # test if seq-string is empty
         if nuc=="*":
-            covtest[j]=1
             continue
 
         # find and remove read indices and mapping quality string
         nuc = re.sub(r'\^.',r'',nuc)
         nuc = nuc.replace('$','')
-        cov = 0
 
         # find and remove InDels
         while "+" in nuc or "-" in nuc:
@@ -171,14 +168,6 @@ for line in load_data(data):
         #print len(nuc),len(qualities)
         nuc = "".join([nuc[x] for x in range(len(nuc)) if ord(qualities[x])-pc>=baseqthreshold])
         nuc = "".join([nuc[x] for x in range(len(nuc)) if nuc[x]!="*"])
-
-        # ignore if coverage is below or above thresholds after filtering for 1) InDels and 2) base-quality
-        if len(nuc)<minimumcov or len(nuc)>maximumcov[CHR][j]:
-            covtest[j]=1
-            continue
-        else:
-            covtest[j]=0
-
 
         # read all alleles
         for i in range(len(nuc)):
@@ -220,18 +209,11 @@ for line in load_data(data):
     ## set ADP,NC,GT,AD and DP
     ADP=sum(totalalleles.values())/len(libraries)
     samplelist=[]
-    co=0
     miss=0
 
     for j in range(len(libraries)):
         ## make empty entry if no allele counts for sample
         if j not in alleles:
-            samplelist.append("./.:.:.:.:.")
-            miss+=1
-            continue
-
-        ## make empty entry if sample not fullfilling min/max coverage threshold
-        if covtest[j]==1:
             samplelist.append("./.:.:.:.:.")
             miss+=1
             continue
@@ -244,9 +226,10 @@ for line in load_data(data):
         GT,AD,RD,FREQ,NC=[],[],0,[],0
         DP=sum(alleleh.values())
 
-        ## test if mincoverage is still reached when removing alleles that do not fullfill criteria
-        if DP<minimumcov:
+        ## test if mincoverage is still reached or if the maxcoverage is still exceeded when removing alleles that do not fullfill criteria; make empty entry if sample not fullfilling min/max coverage threshold
+        if DP<minimumcov or DP>maximumcov[CHR][j]:
             samplelist.append("./.:.:.:.:.")
+            miss+=1
             continue
 
         ## test if sample empty:
