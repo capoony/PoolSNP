@@ -3,8 +3,6 @@
 ## PoolSNP
 
 ## Author: Martin Kapun
-
-
 ## test if Shell is indeed BASH
 
 ###############################################
@@ -194,11 +192,11 @@ if [[ $ref =~ \.gz$ ]]
 
 then
 
-gunzip -c $ref | grep '^>' | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" ' {print "python2.7 scripts/max-cov.py --mpileup "inp"/temp/cov/mpileups/"substr($1,2)".mpileup.gz --cutoff "cut" --contig "substr($1,2)" --out "inp"/temp/cov/cutoffs/"substr($1,2)".txt" }' > $out/temp/contignames.txt
+gunzip -c $ref | grep '^>' | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" ' {print "python3 scripts/max-cov.py --mpileup "inp"/temp/cov/mpileups/"substr($1,2)".mpileup.gz --cutoff "cut" --contig "substr($1,2)" --out "inp"/temp/cov/cutoffs/"substr($1,2)".txt" }' > $out/temp/contignames.txt
 
 else
 
-grep '^>' $ref | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" '{print "python2.7 scripts/max-cov.py --mpileup "inp"/temp/cov/mpileups/"substr($1,2)".mpileup.gz --cutoff "cut" --contig "substr($1,2)" --out "inp"/temp/cov/cutoffs/"substr($1,2)".txt" }' > $out/temp/contignames.txt
+grep '^>' $ref | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" '{print "python3 scripts/max-cov.py --mpileup "inp"/temp/cov/mpileups/"substr($1,2)".mpileup.gz --cutoff "cut" --contig "substr($1,2)" --out "inp"/temp/cov/cutoffs/"substr($1,2)".txt" }' > $out/temp/contignames.txt
 
 fi
 
@@ -247,7 +245,7 @@ gunzip -c $mpileup | parallel \
 --pipe \
 -j $jobs \
 --no-notice \
---cat python2.7 scripts/PoolSnp.py \
+--cat python3 scripts/PoolSnp.py \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
@@ -265,7 +263,7 @@ parallel \
 --pipepart \
 --no-notice \
 -a  $mpileup \
---cat python2.7 scripts/PoolSnp.py \
+--cat python3 scripts/PoolSnp.py \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
@@ -310,7 +308,7 @@ gunzip -c $mpileup | parallel \
 --pipe \
 -j $jobs \
 --no-notice \
---cat python2.7 scripts/bad-sites.py \
+--cat python3 scripts/bad-sites.py \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
@@ -325,7 +323,7 @@ parallel \
 --pipepart \
 --no-notice \
 -a  $mpileup \
---cat python2.7 scripts/bad-sites.py \
+--cat python3 scripts/bad-sites.py \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
