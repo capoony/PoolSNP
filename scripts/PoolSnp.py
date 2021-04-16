@@ -195,7 +195,7 @@ for line in load_data(data):
             alleles[j][nuc[i].upper()] += 1
 
     # test if SNPs pass minimum count / minimum frequency threshold:
-    for allele, counts in totalalleles.items():
+    for allele, counts in totalalleles.copy().items():
         if counts < minimumcount or counts / float(sum(totalalleles.values())) < minimumfreq:
             del totalalleles[allele]
 
