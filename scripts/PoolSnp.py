@@ -229,7 +229,7 @@ for line in load_data(data):
 
         alleleh = alleles[j]
         # remove alleles not counted in all samples
-        for k, v in alleleh.items():
+        for k, v in alleleh.copy().items():
             if k != REF and k not in ALT:
                 del alleleh[k]
         GT, AD, RD, FREQ, NC = [], [], 0, [], 0
