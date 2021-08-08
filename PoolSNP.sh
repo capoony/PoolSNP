@@ -130,7 +130,7 @@ mkdir -p $out/temp
 ###############################################
 
 ## create VCF header
-echo """##fileformat=VCFv4.2
+echo -e """##fileformat=VCFv4.2
 ##fileDate=$(date +%d'/'%m'/'%y)
 ##Source=PoolSnp-1.05
 ##Parameters=<ID=MinCov,Number=$mic,Type=Integer,Description=\"Minimum coverage per sample\">
@@ -146,8 +146,8 @@ echo """##fileformat=VCFv4.2
 ##FORMAT=<ID=RD,Number=1,Type=Integer,Description=\"Reference Counts\">
 ##FORMAT=<ID=AD,Number=1,Type=Integer,Description=\"Alternative Counts\">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description=\"Total Depth\">
-##FORMAT=<ID=FREQ,Number=1,Type=FLoat,Description=\"Variant allele frequency\">
-#CHROM       POS       ID       REF       ALT       QUAL       FILTER       INFO       FORMAT       $new""" > $out/temp/header.txt
+##FORMAT=<ID=FREQ,Number=1,Type=Float,Description=\"Variant allele frequency\">
+#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t$new""" > $out/temp/header.txt
 
 ###############################################
 #### calculate max coverage when necessary ####
