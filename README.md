@@ -32,7 +32,7 @@ PoolSNP is a shell script using GNU parallel to utilize multiple threads. Parame
 python3 script.py -h
 ```
 
-PoolSNP has been tested on Mac OSX (10.11) and Linux Ubuntu (16.10). The shell script only works with a BASH shell and requires Python 3 and GNU parallel to be installed in Path.
+PoolSNP has been tested on Mac OSX (10.11) and Linux Ubuntu (16.10). The shell script only works with a BASH shell and requires Python 3 and GNU parallel to be  in PATH.
 
 To get more help on the different parameters, execute the shell script without parameters
 
