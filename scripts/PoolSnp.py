@@ -28,32 +28,60 @@ group = OptionGroup(parser, helptext)
 #########################################################   parameters   #########################################################################
 
 parser.add_option("--mpileup", dest="m", help="A mpileup file")
-parser.add_option("--min-cov", dest="minc",
-                  help="The minimum coverage threshold: e.g. 10", default=10)
-parser.add_option("--max-cov", dest="max",
-                  help="An input file with precomputed coverage thresholds")
-parser.add_option("--min-count", dest="mint",
-                  help="The minimum number of counts of the alternative allele across all samples pooled", default=3)
-parser.add_option("--min-freq", dest="minf",
-                  help="The minimum Frequency of the alternative allele across all samples pooled", default=0.01)
-parser.add_option("--miss-frac", dest="mis",
-                  help="The minimum Frequency of the alternative allele across all samples pooled", default=0.1)
-parser.add_option("--base-quality-threshold", dest="b",
-                  help="The Base-quality threshold for Qualities encoded in Sanger format (Illumina 1.8 format)", default=15)
-parser.add_option("--names", dest="n",
-                  help="a comma separted list of thenames of all samples in the mpileup file")
-parser.add_option("--coding", dest="c",
-                  help="the Illumina FASTQ quality coding", default=1.8)
-
+parser.add_option(
+    "--min-cov", dest="minc", help="The minimum coverage threshold: e.g. 10", default=10
+)
+parser.add_option(
+    "--max-cov", dest="max", help="An input file with precomputed coverage thresholds"
+)
+parser.add_option(
+    "--min-count",
+    dest="mint",
+    help="The minimum number of counts of the alternative allele across all samples pooled",
+    default=3,
+)
+parser.add_option(
+    "--min-freq",
+    dest="minf",
+    help="The minimum Frequency of the alternative allele across all samples pooled",
+    default=0.01,
+)
+parser.add_option(
+    "--miss-frac",
+    dest="mis",
+    help="The minimum Frequency of the alternative allele across all samples pooled",
+    default=0.1,
+)
+parser.add_option(
+    "--base-quality-threshold",
+    dest="b",
+    help="The Base-quality threshold for Qualities encoded in Sanger format (Illumina 1.8 format)",
+    default=15,
+)
+parser.add_option(
+    "--names",
+    dest="n",
+    help="a comma separted list of thenames of all samples in the mpileup file",
+)
+parser.add_option(
+    "--coding", dest="c", help="the Illumina FASTQ quality coding", default=1.8
+)
+parser.add_option(
+    "--allsites",
+    dest="AS",
+    help="1 if all sites should be report; 0 if only polymorphic sites",
+)
 parser.add_option_group(group)
 (options, args) = parser.parse_args()
 
 
 ################################### functions ######################################
 
+
 def load_data(x):
-    ''' import data either from a gzipped or or uncrompessed file or from STDIN'''
+    """ import data either from a gzipped or or uncrompessed file or from STDIN"""
     import gzip
+
     if x == "-":
         y = sys.stdin
     elif x.endswith(".gz"):
@@ -64,7 +92,7 @@ def load_data(x):
 
 
 def keywithmaxvalue(d):
-    ''' This function resturns the key for the maximum value in a dictionary'''
+    """ This function resturns the key for the maximum value in a dictionary"""
     newhash = d(list)
     for k, v in d.items():
         newhash[v].append(k)
@@ -72,18 +100,18 @@ def keywithmaxvalue(d):
 
 
 def splitter(l, n):
-    ''' This generator function returns equally sized cunks of an list'''
+    """ This generator function returns equally sized cunks of an list"""
     # credit: Meric Lieberman, 2012
     i = 0
     chunk = l[:n]
     while chunk:
         yield chunk
         i += n
-        chunk = l[i:i + n]
+        chunk = l[i: i + n]
 
 
 def extract_indel(l, sign):
-    ''' This function returns an Indel from a sequence string in a pileup'''
+    """ This function returns an Indel from a sequence string in a pileup"""
     position = l.index(sign)
     numb = ""
     i = 0
@@ -95,10 +123,11 @@ def extract_indel(l, sign):
             break
 
     seqlength = int(numb)
-    sequence = l[position:position + i + 1 + seqlength]
+    sequence = l[position: position + i + 1 + seqlength]
     indel = sequence.replace(numb, "")
 
     return sequence, indel
+
 
 ################################## parameters ########################################
 
@@ -137,7 +166,7 @@ for line in load_data(data):
     if len(line.split("\t")) < 2:
         continue
 
-    k = line[:-1].split('\t')
+    k = line[:-1].split("\t")
     CHR, POS, REF = k[:3]
 
     # only keep chromosomal arms with maximum coverage threshold
@@ -161,8 +190,8 @@ for line in load_data(data):
             continue
 
         # find and remove read indices and mapping quality string
-        nuc = re.sub(r'\^.', r'', nuc)
-        nuc = nuc.replace('$', '')
+        nuc = re.sub(r"\^.", r"", nuc)
+        nuc = nuc.replace("$", "")
 
         # find and remove InDels
         while "+" in nuc or "-" in nuc:
@@ -175,8 +204,13 @@ for line in load_data(data):
 
         # test for base quality threshold (if below: ignore nucleotide)
         # print len(nuc),len(qualities)
-        nuc = "".join([nuc[x] for x in range(len(nuc)) if ord(
-            qualities[x]) - pc >= baseqthreshold])
+        nuc = "".join(
+            [
+                nuc[x]
+                for x in range(len(nuc))
+                if ord(qualities[x]) - pc >= baseqthreshold
+            ]
+        )
         nuc = "".join([nuc[x] for x in range(len(nuc)) if nuc[x] != "*"])
 
         # read all alleles
@@ -195,14 +229,19 @@ for line in load_data(data):
             alleles[j][nuc[i].upper()] += 1
 
     # test if SNPs pass minimum count / minimum frequency threshold:
+    # print(totalalleles)
     for allele, counts in totalalleles.copy().items():
-        if counts < minimumcount or counts / float(sum(totalalleles.values())) < minimumfreq:
+        if (
+            counts < minimumcount
+            or counts / float(sum(totalalleles.values())) < minimumfreq
+        ):
             del totalalleles[allele]
 
     # test if site is polymorphic
-    if len(totalalleles) < 2:
-        # print CHR,POS,"non-poly",totalalleles
-        continue
+    if options.AS == "0":
+        if len(totalalleles) < 2:
+            # print CHR,POS,"non-poly",totalalleles
+            continue
 
     # create output for VCF
     ADP = sum(totalalleles.values()) / len(libraries)
@@ -214,6 +253,9 @@ for line in load_data(data):
         if i not in totalalleles:
             continue
         ALT.append(i)
+
+    if ALT == []:
+        ALT.append(".")
 
     # set ADP,NC,GT,AD and DP
     ADP = sum(totalalleles.values()) / len(libraries)
@@ -259,7 +301,15 @@ for line in load_data(data):
             for i in range(len(ALT)):
                 if ALT[i] in alleleh:
                     samplelist.append(
-                        str(i + 1) + "/" + str(i + 1) + ":0:" + str(DP) + ":" + str(DP) + ":1.0")
+                        str(i + 1)
+                        + "/"
+                        + str(i + 1)
+                        + ":0:"
+                        + str(DP)
+                        + ":"
+                        + str(DP)
+                        + ":1.0"
+                    )
                     at = 1
                     continue
         if at == 1:
@@ -278,14 +328,37 @@ for line in load_data(data):
                 FREQ.append(
                     round(alleleh[ALT[i]] / float(sum(alleleh.values())), 2))
 
-        samplelist.append("/".join([str(x) for x in GT]) + ":" + str(RD) + ":" + ",".join(
-            [str(x) for x in AD]) + ":" + str(DP) + ":" + ",".join([str(x) for x in FREQ]))
+        samplelist.append(
+            "/".join([str(x) for x in GT])
+            + ":"
+            + str(RD)
+            + ":"
+            + ",".join([str(x) for x in AD])
+            + ":"
+            + str(DP)
+            + ":"
+            + ",".join([str(x) for x in FREQ])
+        )
 
     # test if missing fraction of samples smaller than threshold:
-    if miss / float(len(libraries)) > missfrac:
-        # print CHR,POS,"missing fraction",miss/float(len(libraries))
-        continue
+    if options.AS == "0":
+        if miss / float(len(libraries)) > missfrac:
+            # print CHR,POS,"missing fraction",miss/float(len(libraries))
+            continue
 
     # write output
-    print(CHR + "\t" + POS + "\t.\t" + REF + "\t" + ",".join(ALT) + "\t.\t.\tADP=" +
-          str(ADP) + ";NC=" + str(NC) + "\tGT:RD:AD:DP:FREQ\t" + "\t".join(samplelist))
+    print(
+        CHR
+        + "\t"
+        + POS
+        + "\t.\t"
+        + REF
+        + "\t"
+        + ",".join(ALT)
+        + "\t.\t.\tADP="
+        + str(ADP)
+        + ";NC="
+        + str(NC)
+        + "\tGT:RD:AD:DP:FREQ\t"
+        + "\t".join(samplelist)
+    )

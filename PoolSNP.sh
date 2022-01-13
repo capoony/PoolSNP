@@ -11,47 +11,50 @@
 
 for i in "$@"
 do
-case $i in
-mpileup=*)
-mpileup="${i#*=}"
-;;
-reference=*)
-ref="${i#*=}"
-;;
-min-cov=*)
-mic="${i#*=}"
-;;
-max-cov=*)
-mac="${i#*=}"
-;;
-min-count=*)
-mico="${i#*=}"
-;;
-min-freq=*)
-mif="${i#*=}"
-;;
-miss-frac=*)
-mis="${i#*=}"
-;;
-base-quality=*)
-bq="${i#*=}"
-;;
-names=*)
-names="${i#*=}"
-;;
-jobs=*)
-jobs="${i#*=}"
-;;
-output=*)
-out="${i#*=}"
-;;
-badsites=*)
-BS=0
-;;
-*)
-# unknown option
-;;
-esac
+  case $i in
+    mpileup=*)
+      mpileup="${i#*=}"
+      ;;
+    reference=*)
+      ref="${i#*=}"
+      ;;
+    min-cov=*)
+      mic="${i#*=}"
+      ;;
+    max-cov=*)
+      mac="${i#*=}"
+      ;;
+    min-count=*)
+      mico="${i#*=}"
+      ;;
+    min-freq=*)
+      mif="${i#*=}"
+      ;;
+    miss-frac=*)
+      mis="${i#*=}"
+      ;;
+    base-quality=*)
+      bq="${i#*=}"
+      ;;
+    names=*)
+      names="${i#*=}"
+      ;;
+    jobs=*)
+      jobs="${i#*=}"
+      ;;
+    output=*)
+      out="${i#*=}"
+      ;;
+    badsites=*)
+      BS=0
+      ;;
+    allsites=*)
+      AS=0
+      ;;
+    *)
+      # unknown option
+      ;;
+  esac
 done
 
 ###############################################
@@ -86,7 +89,7 @@ PoolSNP v. 1.05 - 13/11/2017
 A typcial command line looks like this:
 
 sh ~/PoolSNP.sh \
-mpileup=~/input.mpileup \       ## The input mpileup
+  mpileup=~/input.mpileup \       ## The input mpileup
 output=~/output \               ## The output prefix
 reference=~/reference.fa \      ## The reference FASTA file
 names=sample1,sample2,sample3 \ ## A comma separated list of samples names according to the order in the mpileup file
@@ -114,6 +117,7 @@ if [ -z "$mico" ]; then mico=20; fi
 if [ -z "$bq" ]; then bq=15; fi
 if [ -z "$jobs" ]; then jobs=1; fi
 if [ -z "$BS" ]; then BS=1; else BS=0; fi
+if [ -z "$AS" ]; then AS=1; else AS=0; fi
 
 ## change to home directory of scripts
 BASEDIR=$(dirname $0)
@@ -253,6 +257,7 @@ gunzip -c $mpileup | parallel \
 --miss-frac  $mis \
 --min-count  $mico \
 --base-quality  $bq \
+--allsites $AS \
 >  $out/temp/SNPs.txt
 
 else
@@ -271,6 +276,7 @@ parallel \
 --miss-frac  $mis \
 --min-count  $mico \
 --base-quality  $bq \
+--allsites $AS \
 >  $out/temp/SNPs.txt
 fi
 
