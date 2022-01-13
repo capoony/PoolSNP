@@ -46,10 +46,10 @@ do
       out="${i#*=}"
       ;;
     badsites=*)
-      BS=0
+      BS="${i#*=}"
       ;;
     allsites=*)
-      AS=0
+      AS="${i#*=}"
       ;;
     *)
       # unknown option
@@ -116,8 +116,8 @@ if [ -z "$mif" ]; then mif=0.01; fi
 if [ -z "$mico" ]; then mico=20; fi
 if [ -z "$bq" ]; then bq=15; fi
 if [ -z "$jobs" ]; then jobs=1; fi
-if [ -z "$BS" ]; then BS=1; else BS=0; fi
-if [ -z "$AS" ]; then AS=1; else AS=0; fi
+if [ -z "$BS" ]; then BS=1; fi
+if [ -z "$AS" ]; then AS=0; fi
 
 ## change to home directory of scripts
 BASEDIR=$(dirname $0)

@@ -23,7 +23,7 @@ PoolSNP is a heuristic SNP caller, which uses an MPILEUP file and a reference ge
 
 -   **Missing fraction**, is the maximum percentage of libraries that are allowed to NOT full-fill all above criteria; e.g. if _miss-frac=0.2_ is set, the script will report sites even if 20% of all samples (e.g. 2 out of 10) do not fulfill the coverage criteria
 
--   **All Sites**, if all sites should be reported irrespective of whether they are polymorphic or not, you can set the parameter allsites=1. Note, that this will disable the miss-frac paramter
+-   **All Sites**, if all sites should be reported irrespective of whether they are polymorphic or not, you can set the parameter allsites=1. Note, that this will disable the miss-frac parameter
 
 PoolSNP creates multiple output files:
 
@@ -37,7 +37,7 @@ PoolSNP is a shell script using GNU parallel to utilize multiple threads. Parame
 python3 script.py -h
 ```
 
-PoolSNP has been tested on Mac OSX (10.11) and Linux Ubuntu (16.10). The shell script only works with a BASH shell and requires Python 3 and GNU parallel to be  in PATH.
+PoolSNP has been tested on Mac OSX (10.11) and Linux Ubuntu (16.10). The shell script only works with a BASH shell and requires Python 3 and GNU parallel to be in PATH.
 
 To get more help on the different parameters, execute the shell script without parameters
 
@@ -54,6 +54,7 @@ min-count=10 \
 min-freq=0.01 \
 miss-frac=0.2 \
 jobs=22 \
-BS=1 \
+badsites=1 \
+allsites=0 \
 output=output-file
 ```

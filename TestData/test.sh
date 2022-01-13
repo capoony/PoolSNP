@@ -25,5 +25,5 @@ bash PoolSNP.sh   \
   miss-frac=0.5 \
   jobs=4 \
   BS=1 \
-  AS=1 \
+  all-sites=1 \
   output=TestResult/test
