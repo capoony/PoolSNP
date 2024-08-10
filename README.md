@@ -7,6 +7,10 @@
 -   Python 3
 -   [GNU parallel](https://www.gnu.org/software/parallel/)
 
+### Installation
+
+see also https://bioconda.github.io/recipes/poolsnp/README.html#package-poolsnp for installation with CONDA
+
 ### Description
 
 PoolSNP is a heuristic SNP caller, which uses an MPILEUP file and a reference genome in FASTA format as inputs. NOTE, that the FASTA headers may NOT contain any special characters, such as "/\|,:", or else they will be ignored. Heuristic parameters to be passed to the shell script are:
