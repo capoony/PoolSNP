@@ -5,6 +5,10 @@
 ## Author: Martin Kapun
 ## test if Shell is indeed BASH
 
+# Specify the scripts/ directory
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPTS_DIR="$SCRIPTS_DIR/scripts"
+
 ###############################################
 ######### READ COMMANDLINE ARGUMENTS ##########
 ###############################################
@@ -196,11 +200,11 @@ if [[ $ref =~ \.gz$ ]]
 
 then
 
-gunzip -c $ref | grep '^>' | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" ' {print "python3 scripts/max-cov.py --mpileup "inp"/temp/cov/mpileups/"substr($1,2)".mpileup.gz --cutoff "cut" --contig "substr($1,2)" --out "inp"/temp/cov/cutoffs/"substr($1,2)".txt" }' > $out/temp/contignames.txt
+gunzip -c $ref | grep '^>' | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" -v script_dir="$SCRIPTS_DIR" '{print "python3 " script_dir "/max-cov.py --mpileup " inp "/temp/cov/mpileups/" substr($1,2) ".mpileup.gz --cutoff " cut " --contig " substr($1,2) " --out " inp "/temp/cov/cutoffs/" substr($1,2) ".txt"}' > $out/temp/contignames.txt
 
 else
 
-grep '^>' $ref | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" '{print "python3 scripts/max-cov.py --mpileup "inp"/temp/cov/mpileups/"substr($1,2)".mpileup.gz --cutoff "cut" --contig "substr($1,2)" --out "inp"/temp/cov/cutoffs/"substr($1,2)".txt" }' > $out/temp/contignames.txt
+grep '^>' $ref | awk '$1!~/\|/ && $1!~/\// && $1!~/\\/ && $1!~/,/' | awk -v inp="$out" -v cut="$mac" -v script_dir="$SCRIPTS_DIR" '{print "python3 " script_dir "/max-cov.py --mpileup " inp "/temp/cov/mpileups/" substr($1,2) ".mpileup.gz --cutoff " cut " --contig " substr($1,2) " --out " inp "/temp/cov/cutoffs/" substr($1,2) ".txt"}' > $out/temp/contignames.txt
 
 fi
 
@@ -249,7 +253,7 @@ gunzip -c $mpileup | parallel \
 --pipe \
 -j $jobs \
 --no-notice \
---cat python3 scripts/PoolSnp.py \
+--cat python3 "$SCRIPTS_DIR/PoolSnp.py" \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
@@ -268,7 +272,7 @@ parallel \
 --pipepart \
 --no-notice \
 -a  $mpileup \
---cat python3 scripts/PoolSnp.py \
+--cat python3 "$SCRIPTS_DIR/PoolSnp.py" \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
@@ -314,7 +318,7 @@ gunzip -c $mpileup | parallel \
 --pipe \
 -j $jobs \
 --no-notice \
---cat python3 scripts/bad-sites.py \
+--cat python3 "$SCRIPTS_DIR/bad-sites.py" \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
@@ -329,7 +333,7 @@ parallel \
 --pipepart \
 --no-notice \
 -a  $mpileup \
---cat python3 scripts/bad-sites.py \
+--cat python3 "$SCRIPTS_DIR/bad-sites.py" \
 --mpileup  {} \
 --min-cov $mic \
 --max-cov  $mac \
